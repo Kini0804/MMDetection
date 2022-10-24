@@ -1,11 +1,12 @@
 _base_ = ['../_base_/schedules/schedule_1x.py', '../_base_/default_runtime.py']
 
+
 img_scale = (960, 960)  # height, width
 
 # model settings
 model = dict(
     type='YOLOX',
-    input_size=img_scale,
+    # input_size=img_scale,
     random_size_range=(15, 25),
     random_size_interval=10,
     backbone=dict(type='CSPDarknet', deepen_factor=0.33, widen_factor=0.5),
