@@ -7,8 +7,8 @@ model = dict(
     backbone=dict(
         type='Darknet',
         depth=53,
-        out_indices=(3, 4, 5),
-        init_cfg=dict(type='Pretrained', checkpoint='open-mmlab://darknet53')),
+        out_indices=(3, 4, 5)),
+        # init_cfg=dict(type='Pretrained', checkpoint='open-mmlab://darknet53')),
     neck=dict(
         type='YOLOV3Neck',
         num_scales=3,
@@ -107,12 +107,12 @@ data = dict(
         pipeline=train_pipeline),
     val=dict(
         type=dataset_type,
-        ann_file=data_root + 'VOC2007/ImageSets/Main/test.txt',
+        ann_file=data_root + 'VOC2007/ImageSets/Main/trainval.txt',
         img_prefix=data_root + 'VOC2007/',
         pipeline=test_pipeline),
     test=dict(
         type=dataset_type,
-        ann_file=data_root + 'VOC2007/ImageSets/Main/test.txt',
+        ann_file=data_root + 'VOC2007/ImageSets/Main/trainval.txt',
         img_prefix=data_root + 'VOC2007/',
         pipeline=test_pipeline))
 # optimizer
@@ -128,17 +128,18 @@ lr_config = dict(
 # runtime settings
 runner = dict(type='EpochBasedRunner', max_epochs=50)
 
-checkpoint_config = dict(interval=10)
+checkpoint_config = dict(interval=5)
 
-evaluation = dict(interval=10, metric=['mAP'])
+evaluation = dict(interval=1, metric=['mAP'])
 
 log_config = dict(interval=100)
 
 # resume_from = 'work_dirs/my_yolov3/latest.pth'
+resume_from = None
 custom_hooks = [
     dict(
         type='ExpMomentumEMAHook',
-        resume_from=None,
+        resume_from=resume_from,
         momentum=0.0001,
         priority=49)
 ]

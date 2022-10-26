@@ -1,5 +1,5 @@
 _base_ = [
-    '../_base_/default_runtime.py'
+    '../_base_/schedules/schedule_1x.py', '../_base_/default_runtime.py'
 ]
 
 img_scale = (960, 960)  # height, width
@@ -13,11 +13,11 @@ model = dict(
         out_indices=(3, ),
         frozen_stages=1,
         norm_cfg=dict(type='BN', requires_grad=False),
-        norm_eval=True,
-        style='caffe',
-        init_cfg=dict(
-            type='Pretrained',
-            checkpoint='open-mmlab://detectron/resnet50_caffe')),
+        norm_eval=True),
+        # style='caffe',
+        # init_cfg=dict(
+        #     type='Pretrained',
+        #     checkpoint='open-mmlab://detectron/resnet50_caffe')),
     neck=dict(
         type='DilatedEncoder',
         in_channels=2048,
@@ -58,18 +58,9 @@ model = dict(
     test_cfg=dict(
         nms_pre=1000,
         min_bbox_size=0,
-        score_thr=0.05,
-        nms=dict(type='nms', iou_threshold=0.6),
+        score_thr=0.01,
+        nms=dict(type='nms', iou_threshold=0.65),
         max_per_img=100))
-# optimizer
-optimizer = dict(
-    type='SGD',
-    lr=0.12,
-    momentum=0.9,
-    weight_decay=0.0001,
-    paramwise_cfg=dict(
-        norm_decay_mult=0., custom_keys={'backbone': dict(lr_mult=1. / 3)}))
-lr_config = dict(warmup_iters=1500, warmup_ratio=0.00066667)
 
 # use caffe img_norm
 img_norm_cfg = dict(
@@ -109,7 +100,7 @@ test_pipeline = [
 dataset_type = 'VOCDataset'
 data_root = 'data/SeaShips/'
 data = dict(
-    samples_per_gpu=2,
+    samples_per_gpu=4,
     workers_per_gpu=4,
     train=dict(
         type=dataset_type,
@@ -129,23 +120,128 @@ data = dict(
 
 
 # optimizer
-# optimizer = dict(type='SGD', lr=0.02, momentum=0.9, weight_decay=0.0001)
-optimizer = dict(type='SGD', lr=0.001, momentum=0.9, weight_decay=0.0005)
-# optimizer_config = dict(grad_clip=None)
-optimizer_config = dict(grad_clip=dict(max_norm=35, norm_type=2))
+
+# optimizer
+# optimizer = dict(
+#     type='SGD',
+#     lr=0.12,
+#     momentum=0.9,
+#     weight_decay=0.0001,
+#     paramwise_cfg=dict(
+#         norm_decay_mult=0., custom_keys={'backbone': dict(lr_mult=1. / 3)}))
+# lr_config = dict(warmup_iters=1500, warmup_ratio=0.00066667)
+optimizer = dict(
+    type='SGD',
+    lr=0.01,
+    momentum=0.9,
+    weight_decay=5e-4,
+    nesterov=True,
+    paramwise_cfg=dict(norm_decay_mult=0., bias_decay_mult=0.))
+optimizer_config = dict(grad_clip=None)
+
+max_epochs = 50
+num_last_epochs = 5
+resume_from = None
+interval = 10
+
 # learning policy
 lr_config = dict(
     policy='step',
     warmup='linear',
-    warmup_iters=500,
-    warmup_ratio=0.001,
+    warmup_iters=5,
+    warmup_ratio=1,
     step=[8, 11])
 runner = dict(type='EpochBasedRunner', max_epochs=50)
 
 log_config = dict(interval=100)
 
+evaluation = dict(
+    save_best='auto',
+    # The evaluation interval is 'interval' when running epoch is
+    # less than ‘max_epochs - num_last_epochs’.
+    # The evaluation interval is 1 when running epoch is greater than
+    # or equal to ‘max_epochs - num_last_epochs’.
+    interval=1,
+    dynamic_intervals=[(max_epochs - num_last_epochs, 1)],
+    metric='mAP')
+
+checkpoint_config = dict(interval=interval)
+
+# resume_from = 'work_dirs/my_yolov5/latest.pth'
+custom_hooks = [
+    dict(
+        type='SyncNormHook',
+        num_last_epochs=num_last_epochs,
+        interval=interval,
+        priority=48),
+    dict(
+        type='ExpMomentumEMAHook',
+        resume_from=None,
+        momentum=0.0001,
+        priority=49)
+]
 
 # NOTE: `auto_scale_lr` is for automatically scaling LR,
 # USER SHOULD NOT CHANGE ITS VALUES.
 # base_batch_size = (8 GPUs) x (8 samples per GPU)
 auto_scale_lr = dict(base_batch_size=64)
+# optimizer = dict(
+#     type='SGD',
+#     lr=0.01,
+#     momentum=0.9,
+#     weight_decay=5e-4,
+#     nesterov=True,
+#     paramwise_cfg=dict(norm_decay_mult=0., bias_decay_mult=0.))
+# optimizer_config = dict(grad_clip=None)
+#
+# max_epochs = 50
+# num_last_epochs = 5
+# resume_from = None
+# interval = 10
+#
+# # learning policy
+# lr_config = dict(
+#     _delete_=True,
+#     policy='YOLOX',
+#     warmup='exp',
+#     by_epoch=False,
+#     warmup_by_epoch=True,
+#     warmup_ratio=1,
+#     warmup_iters=5,  # 5 epoch
+#     num_last_epochs=num_last_epochs,
+#     min_lr_ratio=0.05)
+#
+# runner = dict(type='EpochBasedRunner', max_epochs=max_epochs)
+#
+# custom_hooks = [
+#     dict(
+#         type='YOLOXModeSwitchHook',
+#         num_last_epochs=num_last_epochs,
+#         priority=48),
+#     dict(
+#         type='SyncNormHook',
+#         num_last_epochs=num_last_epochs,
+#         interval=interval,
+#         priority=48),
+#     dict(
+#         type='ExpMomentumEMAHook',
+#         resume_from=resume_from,
+#         momentum=0.0001,
+#         priority=49)
+# ]
+# checkpoint_config = dict(interval=interval)
+# evaluation = dict(
+#     save_best='auto',
+#     # The evaluation interval is 'interval' when running epoch is
+#     # less than ‘max_epochs - num_last_epochs’.
+#     # The evaluation interval is 1 when running epoch is greater than
+#     # or equal to ‘max_epochs - num_last_epochs’.
+#     interval=interval,
+#     dynamic_intervals=[(max_epochs - num_last_epochs, 1)],
+#     metric='mAP')
+# log_config = dict(interval=100)
+#
+# # NOTE: `auto_scale_lr` is for automatically scaling LR,
+# # USER SHOULD NOT CHANGE ITS VALUES.
+# # base_batch_size = (8 GPUs) x (8 samples per GPU)
+# auto_scale_lr = dict(base_batch_size=64)

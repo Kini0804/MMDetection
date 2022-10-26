@@ -161,7 +161,7 @@ optimizer_config = dict(grad_clip=None)
 max_epochs = 50
 num_last_epochs = 5
 resume_from = None
-interval = 2
+interval = 10
 
 # learning policy
 lr_config = dict(
