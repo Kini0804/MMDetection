@@ -16,7 +16,16 @@ class VOCDataset(XMLDataset):
     #            'motorbike', 'person', 'pottedplant', 'sheep', 'sofa', 'train',
     #            'tvmonitor')
     CLASSES = ('ore carrier', 'bulk cargo carrier', 'general cargo ship', 'container ship',
-               'fishing boat', 'passenger ship')
+               'fishing boat', 'passenger ship',
+               'ship', 'aircraft carrier', 'warcraft',
+               'merchant ship', 'Nimitz class aircraft carrier', 'Enterprise class aircraft carrier',
+               'Arleigh Burke class destroyers', 'WhidbeyIsland class landing craft', 'Perry class frigate',
+               'Sanantonio class amphibious transport dock', 'Ticonderoga class cruiser', 'Kitty Hawk class aircraft carrier',
+               'Admiral Kuznetsov aircraft carrier', 'Abukuma-class destroyer escort', 'Austen class amphibious transport dock',
+               'Tarawa-class amphibious assault ship', 'USS Blue Ridge (LCC-19)', 'OXo|--)',
+               'Car carrier', 'general cargo ship', 'submarine', 'lute',
+               'Medical ship', 'Car carrier', 'Ford-class aircraft carriers', 'Midway-class aircraft carrier',
+               'Invincible-class aircraft carrier')
 
     PALETTE = [(106, 0, 228), (119, 11, 32), (165, 42, 42), (0, 0, 192),
                (197, 226, 255), (0, 60, 100), (0, 0, 142), (255, 77, 255),

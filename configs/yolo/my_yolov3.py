@@ -1,6 +1,6 @@
 _base_ = '../_base_/default_runtime.py'
 # model settings
-img_scale = (960, 960)  # height, width
+img_scale = (640, 640)  # height, width
 
 model = dict(
     type='YOLOV3',
@@ -107,12 +107,12 @@ data = dict(
         pipeline=train_pipeline),
     val=dict(
         type=dataset_type,
-        ann_file=data_root + 'VOC2007/ImageSets/Main/trainval.txt',
+        ann_file=data_root + 'VOC2007/ImageSets/Main/test.txt',
         img_prefix=data_root + 'VOC2007/',
         pipeline=test_pipeline),
     test=dict(
         type=dataset_type,
-        ann_file=data_root + 'VOC2007/ImageSets/Main/trainval.txt',
+        ann_file=data_root + 'VOC2007/ImageSets/Main/test.txt',
         img_prefix=data_root + 'VOC2007/',
         pipeline=test_pipeline))
 # optimizer
