@@ -11,15 +11,29 @@ from .xml_style import XMLDataset
 @DATASETS.register_module()
 class VOCDataset(XMLDataset):
 
-    CLASSES = ('aeroplane', 'bicycle', 'bird', 'boat', 'bottle', 'bus', 'car',
-               'cat', 'chair', 'cow', 'diningtable', 'dog', 'horse',
-               'motorbike', 'person', 'pottedplant', 'sheep', 'sofa', 'train',
-               'tvmonitor')
-
+    # CLASSES = ('aeroplane', 'bicycle', 'bird', 'boat', 'bottle', 'bus', 'car',
+    #            'cat', 'chair', 'cow', 'diningtable', 'dog', 'horse',
+    #            'motorbike', 'person', 'pottedplant', 'sheep', 'sofa', 'train',
+    #            'tvmonitor')
+    # CLASSES = ('ore carrier', 'bulk cargo carrier', 'general cargo ship', 'container ship', 'fishing boat',
+    #             'passenger ship', 'ship', 'aircraft carrier', 'warcraft', 'merchant ship',
+    #             'Nimitz class aircraft carrier', 'Enterprise class aircraft carrier', 'Arleigh Burke class destroyers', 'WhidbeyIsland class landing craft', 'Perry class frigate',
+    #            'Sanantonio class amphibious transport dock', 'Ticonderoga class cruiser', 'Kitty Hawk class aircraft carrier', 'Admiral Kuznetsov aircraft carrier', 'Abukuma-class destroyer escort',
+    #            'Austen class amphibious transport dock', 'Tarawa-class amphibious assault ship', 'USS Blue Ridge (LCC-19)', 'OXo|--)', 'Car carrier', 'submarine',
+    #            'lute', 'Medical ship', 'Ford-class aircraft carriers', 'Midway-class aircraft carrier', 'Invincible-class aircraft carrier')
+    # CLASSES = ('ship', 'aircraft carrier', 'warcraft', 'merchant ship', 'Nimitz class aircraft carrier', 'Enterprise class aircraft carrier', 'Arleigh Burke class destroyers',
+    # 'WhidbeyIsland class landing craft', 'Perry class frigate', 'Sanantonio class amphibious transport dock', 'Ticonderoga class cruiser',
+    # 'Kitty Hawk class aircraft carrier', 'Admiral Kuznetsov aircraft carrier', 'Abukuma-class destroyer escort', 'Austen class amphibious transport dock',
+    # 'Tarawa-class amphibious assault ship', 'USS Blue Ridge (LCC-19)', 'Container ship', 'OXo|--)', 'Car carrier([]==[])', 'Hovercraft', 'yacht', 'Container ship(_|.--.--|_]=',
+    # 'Cruise ship', 'submarine', 'lute', 'Medical ship', 'Car carrier(======|', 'Ford-class aircraft carriers', 'Midway-class aircraft carrier', 'Invincible-class aircraft carrier')
+    CLASSES = ('船', '航母', '军舰', '商船', '尼米兹级航母', '企业级航母', '阿利伯克级驱逐舰', '惠德贝岛级船坞登陆舰', '佩里级护卫舰', '圣安东尼奥级两栖船坞运输舰', '提康德罗加级巡洋舰', '小鹰级航母', '俄罗斯库兹涅佐夫号航母', '阿武隈级护卫舰', '奥斯汀级两栖船坞运输舰', '塔拉瓦级通用两栖攻击舰', '蓝岭级指挥舰', '集装箱货船', '尾部OX头部圆指挥舰', '运输汽车船([]==[])', '气垫船', '游艇', '货船(_|.--.--|_]=', '游轮', '潜艇', '琵琶形军舰', '医疗船', '运输汽车船(======|', '福特级航空母舰', '中途号航母', '无敌级航空母舰')
     PALETTE = [(106, 0, 228), (119, 11, 32), (165, 42, 42), (0, 0, 192),
                (197, 226, 255), (0, 60, 100), (0, 0, 142), (255, 77, 255),
                (153, 69, 1), (120, 166, 157), (0, 182, 199), (0, 226, 252),
                (182, 182, 255), (0, 0, 230), (220, 20, 60), (163, 255, 0),
+               (0, 82, 0), (3, 95, 161), (0, 80, 100), (183, 130, 88),
+               (0, 82, 0), (3, 95, 161), (0, 80, 100), (183, 130, 88),
+               (0, 82, 0), (3, 95, 161), (0, 80, 100), (183, 130, 88),
                (0, 82, 0), (3, 95, 161), (0, 80, 100), (183, 130, 88)]
 
     def __init__(self, **kwargs):

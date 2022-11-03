@@ -13,6 +13,10 @@ from mmdet.core.evaluation.panoptic_utils import INSTANCE_OFFSET
 from ..mask.structures import bitmap_to_polygon
 from ..utils import mask2ndarray
 from .palette import get_palette, palette_val
+from pylab import mpl
+ 
+# 设置中文显示字体
+mpl.rcParams["font.sans-serif"] = ["SimHei"]
 
 __all__ = [
     'color_val_matplotlib', 'draw_masks', 'draw_bboxes', 'draw_labels',
